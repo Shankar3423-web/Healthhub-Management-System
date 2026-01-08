@@ -36,11 +36,9 @@ const DoctorProfileForm = () => {
   const [originalPassword, setOriginalPassword] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [loaded, setLoaded] = useState(false);
-
   // Validate required data on load
   useEffect(() => {
-    setLoaded(true);
+
     if (!name || !email || !signupPassword) {
       setError('Signup information missing. Please sign up again.');
       setTimeout(() => navigate('/signup'), 1500);
