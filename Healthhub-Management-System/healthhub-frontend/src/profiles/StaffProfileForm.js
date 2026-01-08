@@ -6,44 +6,55 @@ const StaffProfileForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get data from signup
-  const { name: signupName, email: signupEmail, password: signupPassword } = location.state || {};
-
+  // Get data from signup (state OR localStorage)
   const [formData, setFormData] = useState({
-    name: signupName || '',
-    email: signupEmail || '',
-    gender: '',
-    dob: '',
-    age: '',
-    contactNumber: '',
-    designation: '',
-    department: '',
-    qualification: '',
-    experience: '',
-    joiningDate: '',
-    availableDays: '',
-    availableTime: '',
-    address: '',
-    emergencyContact: '',
-    bloodGroup: '',
-    password: '',
+    name: '', email: '', gender: '', dob: '', age: '', contactNumber: '',
+    designation: '', department: '', qualification: '', experience: '',
+    joiningDate: '', availableDays: '', availableTime: '', address: '',
+    emergencyContact: '', bloodGroup: '', password: '',
   });
 
   const [originalPassword, setOriginalPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line
   const [loaded, setLoaded] = useState(false);
 
   // Validate and set original password
   useEffect(() => {
-    setLoaded(true);
-    if (!signupName || !signupEmail || !signupPassword) {
-      setError('Signup information missing. Please sign up again.');
-      setTimeout(() => navigate('/signup'), 1500);
-      return;
+    // 1. Try to get data from navigation state (most secure/direct)
+    const stateData = location.state;
+
+    // 2. Fallback to localStorage (if user refreshed page)
+    const storageData = JSON.parse(localStorage.getItem('pendingProfile'));
+
+    // Prioritize State, then Storage
+    const profileData = stateData || storageData;
+
+    // Validation
+    if (!profileData || (profileData.role && profileData.role !== 'staff')) {
+      // Allow if generic signup (no role in object) but valid email
+      if (!profileData || !profileData.email) {
+        setError('Signup information missing. Please sign up again.');
+        setTimeout(() => navigate('/signup'), 2000);
+        return;
+      }
     }
-    setOriginalPassword(signupPassword);
-  }, [signupName, signupEmail, signupPassword, navigate]);
+
+    setFormData(prev => ({
+      ...prev,
+      name: profileData.name || '',
+      email: profileData.email || '',
+    }));
+
+    // Ensure password from state is available or fallback to localstorage for validation later
+    if (stateData && stateData.password) {
+      localStorage.setItem('tempSignupPassword', stateData.password);
+    }
+    const storedPass = localStorage.getItem('tempSignupPassword');
+    setOriginalPassword(storedPass || '');
+
+  }, [location.state, navigate]);
 
   const calculateAge = (dob) => {
     if (!dob) return '';
