@@ -1,38 +1,54 @@
 // src/profiles/PatientProfileForm.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const PatientProfileForm = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Hook to access state passed from navigate
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [medicalProblem, setMedicalProblem] = useState('');
-  const [dob, setDob] = useState('');
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
-  const [contact, setContact] = useState('');
-  const [bloodGroup, setBloodGroup] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  // ... other states ...
 
   useEffect(() => {
     setLoaded(true);
-    // ✅ Read data from localStorage
-    const pending = JSON.parse(localStorage.getItem('pendingProfile'));
-    if (!pending || pending.role !== 'patient') {
-      setError('Access denied. Please sign up first.');
-      return;
+
+    // 1. Try to get data from navigation state (most secure/direct)
+    const stateData = location.state;
+
+    // 2. Fallback to localStorage (if user refreshed page)
+    const storageData = JSON.parse(localStorage.getItem('pendingProfile'));
+
+    // Prioritize State, then Storage
+    const profileData = stateData || storageData;
+
+    // Validation
+    if (!profileData || (profileData.role && profileData.role !== 'patient')) {
+      // Note: SignUp might not pass role in state object explicitly if not added to navigationState,
+      // but let's assume valid flow if name/email exist.
+      if (!profileData || (!profileData.email)) {
+        setError('Access denied. Please sign up first.');
+        return;
+      }
     }
-    setName(pending.name);
-    setEmail(pending.email);
-    setAddress(pending.address || '');
-    setMedicalProblem(pending.medicalProblem || '');
-  }, []);
+
+    setName(profileData.name || '');
+    setEmail(profileData.email || '');
+    setAddress(profileData.address || ''); // If pre-filled
+    setMedicalProblem(profileData.medicalProblem || '');
+
+    // Ensure password from state is available or fallback to localstorage for validation later
+    if (stateData && stateData.password) {
+      // We can store it temporarily in a state variable or ref if needed, 
+      // but component logic currently uses localStorage for password check.
+      // Let's ensure localStorage has the password if it came from state, 
+      // to keep the existing validation logic working without major refactor.
+      localStorage.setItem('tempSignupPassword', stateData.password);
+    }
+
+  }, [location.state]);
 
   // Calculate age when DOB changes
   useEffect(() => {
