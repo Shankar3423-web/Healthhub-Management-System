@@ -10,7 +10,16 @@ const PatientProfileForm = () => {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [medicalProblem, setMedicalProblem] = useState('');
-  // ... other states ...
+  const [dob, setDob] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [contact, setContact] = useState('');
+  const [bloodGroup, setBloodGroup] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
