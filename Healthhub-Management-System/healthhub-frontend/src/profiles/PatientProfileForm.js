@@ -19,10 +19,10 @@ const PatientProfileForm = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+
 
   useEffect(() => {
-    setLoaded(true);
+
 
     // 1. Try to get data from navigation state (most secure/direct)
     const stateData = location.state;
