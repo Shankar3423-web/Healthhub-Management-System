@@ -47,10 +47,10 @@ const SignUp = () => {
 
       const navigationState = { name, email, password };
       switch (role) {
-        case 'admin': navigate('/admin-profile', { state: navigationState }); break;
-        case 'doctor': navigate('/doctor-profile', { state: navigationState }); break;
-        case 'staff': navigate('/staff-profile', { state: navigationState }); break;
-        case 'patient': navigate('/patient-profile', { state: navigationState }); break;
+        case 'admin': navigate('/admin/profile', { state: navigationState }); break;
+        case 'doctor': navigate('/doctor/profile', { state: navigationState }); break;
+        case 'staff': navigate('/staff/profile', { state: navigationState }); break;
+        case 'patient': navigate('/patient/profile', { state: navigationState }); break;
         default: navigate('/');
       }
     } catch (err) {

@@ -51,10 +51,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
 
-          <Route path="/admin-profile" element={<AdminProfileForm />} />
-          <Route path="/doctor-profile" element={<DoctorProfileForm />} />
-          <Route path="/patient-profile" element={<PatientProfileForm />} />
-          <Route path="/staff-profile" element={<StaffProfileForm />} />
+          <Route path="/admin/profile" element={<AdminProfileForm />} />
+          <Route path="/doctor/profile" element={<DoctorProfileForm />} />
+          <Route path="/patient/profile" element={<PatientProfileForm />} />
+          <Route path="/staff/profile" element={<StaffProfileForm />} />
 
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
