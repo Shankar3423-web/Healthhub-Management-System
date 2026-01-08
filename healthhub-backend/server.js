@@ -16,7 +16,12 @@ connectDB();
 
 // 📌 Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    // Allow any origin (Vercel, Localhost, etc.)
+    return callback(null, true);
+  },
   credentials: true,
 }));
 app.use(express.json());
